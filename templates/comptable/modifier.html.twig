@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comptable - Suivi{% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav style="background-color:#e83753;" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <ul class="nav navbar-nav">
+                    <li><a style="color:#ffffff;">{{ app.session.get('prenom') }} {{ app.session.get('nom') }}</a></li>
+                </ul>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a style="color:#ffffff;margin-left:200px;" href="/comptable">Accueil</a></li>
+                    <li><a style="color:#ffffff;" href="/comptable_valider">Valider fiche de frais</a></li>
+                    <li><a style="color:#ffffff;" href="/comptable_suivi">Suivi fiche de frais</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a style="color:#ffffff;" href="/connexion">Se déconnecter</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+<div>
+    <center>
+        <table style="width:50%; background-color:whitesmoke; border-radius: 5px;" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Mois</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Prenom</th>
+                    <th scope="col">Nbjustificatifs</th>
+                    <th scope="col">Montantvalide</th>
+                    <th scope="col">Datemodif</th>
+                    <th scope="col">Etat</th>
+                    <th scope="col"></th>     
+                </tr>
+            </thead>
+            <tbody>      
+                <tr>
+                    {{ form_start(form) }}
+                    <th scope="row">{{ fichefrais.mois }}</th>
+                    <td>{{ fichefrais.idVisiteur.nom }}</td>
+                    <td>{{ fichefrais.idVisiteur.prenom }}</td>
+                    <td>{{ form_widget(form.nbJustificatifs, {'attr': {'class': 'form-horizontal'}}) }}</td>
+                    <td>{{ fichefrais.montantvalide }}</td>
+                    <td>{{ fichefrais.datemodif|date('d-m-Y') }}</td>
+                    <td>{{ form_widget(form.idetat, {'attr': {'class': 'form-horizontal'}}) }}</td>
+                    <td>{{ form_widget(form.valider) }}</td>
+                    {{ form_end(form) }}
+                </tr>              
+            </tbody>
+        </table>
+    </center>
+</div>      
+{% endblock %}

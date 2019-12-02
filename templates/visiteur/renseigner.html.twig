@@ -25,20 +25,73 @@
         </div>
     </nav>
     <center>
-        <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
-        {{ form(form) }}
-        <br/>
-        <h2>Frais Hors Forfait</h2>
-        {{ form_start(form2, {'attr': {'class': 'form-horizontal'}}) }}
-        {{ form_widget(form2) }}
+    <div style="width: 50%; border: 1px solid black; background-color: background"><center>        
+            <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
+            {% if error == 1 %}
+                <p class="alert alert-danger">Cette fiche de frais existe déjà!</p>
+            {% endif %}
+            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {{ form_label(form.mois) }}
+            {{ form_widget(form.mois) }}<br/><br/>
+            {{ form_label(form.nbjustificatifs) }}
+            {{ form_widget(form.nbjustificatifs) }}<br/>
+            <br/>
+            <div class="row">
+                <div>
+                    {{ form_widget(form.annuler) }}
+                    <a style="margin-left:20px">{{ form_widget(form.valider) }}</a>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            <br/>
+        </center>
+    </div>
+    <br/>
+    <div style="width: 50%; border: 1px solid black; background-color: background"><center>
+        <h2>Frais Forfait</h2>
+        {{ form_start(form3, {'attr': {'class': 'form-horizontal'}}) }}
+        {{ form_label(form3.quantiteRepas) }}
+        {{ form_widget(form3.quantiteRepas) }}<br/><br/>
+        {{ form_label(form3.quantiteNuitee) }}
+        {{ form_widget(form3.quantiteNuitee) }}<br/><br/>
+        {{ form_label(form3.quantiteKilometres) }}
+        {{ form_widget(form3.quantiteKilometres) }}<br/><br/>
+        {{ form_label(form3.quantiteEtape) }}
+        {{ form_widget(form3.quantiteEtape) }}<br/><br/>
+        {{ form_label(form3.mois) }}
+        {{ form_widget(form3.mois) }}<br/>
         <br/>
         <div class="row">
             <div>
-                <button type="reset" class="btn btn-danger">Annuler</button>
-                <button style="margin-left: 20px" type="submit" class="btn btn-success">Valider</button>
+                {{ form_widget(form3.annuler) }}
+                <a style="margin-left:20px">{{ form_widget(form3.valider) }}</a>
             </div>
+            {{ form_end(form3) }}
         </div>
+        <br/>
+    </center></div>
+    <br/>
+    <div style="width: 50%; border: 1px solid black; background-color: background"><center>
+        <h2>Frais Hors Forfait</h2>
+        {{ form_start(form2, {'attr': {'class': 'form-horizontal'}}) }}
+        {{ form_label(form2.libelle) }}
+        {{ form_widget(form2.libelle) }}<br/>
+        {{ form_label(form2.date) }}
+        {{ form_widget(form2.date) }}<br/>
+        {{ form_label(form2.montant) }}
+        {{ form_widget(form2.montant) }}<br/><br/>
+        {{ form_label(form2.mois) }}
+        {{ form_widget(form2.mois) }}<br/>
+        <br/>
+        <div class="row">
+            <div>
+                {{ form_widget(form2.annuler) }}
+                <a style="margin-left:20px">{{ form_widget(form2.valider) }}</a>
+            </div>
+            {{ form_end(form2) }}
+        </div>
+        <br/>
+    </center></div>
     </center>
 </div>
 {% endblock %}
-

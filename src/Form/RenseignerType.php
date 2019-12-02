@@ -5,35 +5,23 @@ namespace App\Form;
 use App\Entity\FicheFrais;
 use App\Entity\Etat;
 use App\Entity\Visiteur;
-use App\Entity\FraisForfait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class RenseignerType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('mois')
-            ->add('nbjustificatifs')
-            ->add('montantvalide')
-            ->add('datemodif', DateType::class)
-            ->add('idetat', EntityType::class, array('class'=> Etat::class,'choice_label' => 'id'))
-            
-            
-            ->add('valider',SubmitType::class, array('label' => 'Valider', 'attr' =>array('class' => 'btn btn-success')))
-            ->add('annuler',ResetType::class, array('label' => 'Quitter', 'attr' =>array('class' => 'btn btn-warning')))
+            ->add('mois', ChoiceType::class, array('choices'  => ['Janvier' => 'Janvier', 'Février' => 'Février', 'Mars' => 'Mars', 'Avril' => 'Avril', 'Mai' => 'Mai', 'Juin' => 'Juin', 'Juillet' => 'Juillet', 'Août' => 'Août', 'Septembre' => 'Septembre', 'Octobre' => 'Octobre', 'Novembre' => 'Novembre', 'Décembre' => 'Décembre'], 'label' => 'Mois : '))
+            ->add('nbjustificatifs', NumberType::class, array('label' => 'Nombre de justificatifs : '))
+            ->add('valider', SubmitType::class, array('label' => 'Valider', 'attr' =>array('class' => 'btn btn-success')))
+            ->add('annuler', ResetType::class, array('label' => 'Annuler', 'attr' =>array('class' => 'btn btn-danger')))
         ;
     }
 

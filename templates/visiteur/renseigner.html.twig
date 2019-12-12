@@ -14,7 +14,8 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a style="color:#ffffff; margin-right: 250px" href="/visiteur">Accueil</a></li>
+                    <li><a style="color:#ffffff;">{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</a></li>
+                    <li><a style="color:#ffffff; margin-left: 240px" href="/visiteur">Accueil</a></li>
                     <li><a style="color:#ffffff;" href="/renseigner">Renseigner fiche de frais</a></li>
                         <li><a style="color:#ffffff;" href="/consulter">Consulter fiche de frais</a></li>
                 </ul>
@@ -24,7 +25,8 @@
             </div>
         </div>
     </nav>
-    <center>
+</div>
+<center>
     <div style="width: 50%; border: 1px solid black; background-color: background"><center>        
             <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
             {% if error == 1 %}

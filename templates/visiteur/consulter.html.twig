@@ -91,6 +91,7 @@
                         <th scope="col">Montant</th>
                         <th scope="col">Date</th>
                         <th scope="col">Libelle</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,7 +99,10 @@
                         <tr>
                             <td>{{ unefichefraishorsforfait.montant}}</td>
                             <td>{{ unefichefraishorsforfait.date|date('d-m-Y') }}</td>
-                            <td>{{ unefichefraishorsforfait.libelle}}</td>   
+                            <td>{{ unefichefraishorsforfait.libelle}}</td>
+                            <form action="/supprimerHorsForfaitVisiteur/{{ unefichefraishorsforfait.id }}" Method="post">
+                                <td><button>Supprimer</button></td>
+                            </form>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -14,21 +14,21 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a style="color:#ffffff;">{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</a></li>
-                    <li><a style="color:#ffffff; margin-left: 240px" href="/visiteur">Accueil</a></li>
-                    <li><a style="color:#ffffff;" href="/renseigner">Renseigner fiche de frais</a></li>
-                        <li><a style="color:#ffffff;" href="/consulter">Consulter fiche de frais</a></li>
+                    <li title="{{ app.session.get('nom') }} {{ app.session.get('prenom') }}" ><a style="color:#ffffff;">{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</a></li>
+                    <li title="Accueil"><a style="color:#ffffff; margin-left: 240px" href="/visiteur">Accueil</a></li>
+                    <li title="Renseigner fiche de frais"><a style="color:#ffffff;" href="/renseigner">Renseigner fiche de frais</a></li>
+                    <li title="Consulter fiche de frais"><a style="color:#ffffff;" href="/consulter">Consulter fiche de frais</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a style="color:#ffffff;" href="/connexion">Se déconnecter</a></li>
+                    <li><a style="color:#ffffff;" href="connexion">Se déconnecter</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 </div>
 <div>
+    <center>
     {% if fichefrais != null %}
-        <center>
             <p style="font-weight:bold; width:60%; background-color:whitesmoke; border-radius: 5px;" class="table">Fiche Frais</p>
             <table style="width:50%; background-color:whitesmoke; border-radius: 5px;" class="table">
                 <thead>

@@ -7,11 +7,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Form\ValiderFicheType;
-use App\Entity\Visiteur;
 use App\Entity\Etat;
 use App\Entity\FicheFrais;
 use App\Entity\LigneFraisForfait;
 use App\Entity\LigneFraisHorsForfait;
+use App\Form\ChoisirMoisType;
+use App\Entity\Visiteur;
 use App\Form\ModifierFicheFraisType;
 use App\Form\ModifierQuantiteRepasType;
 use App\Form\ModifierQuantiteEtapeType;
@@ -30,8 +31,44 @@ class ComptableController extends AbstractController
         return $this->render('comptable/index.html.twig');
     }
     
-    /**
+        /**
+     * @Route("/consulter", name="consulter")
+     */
+    public function consulter(Request $query, SessionInterface $session)
+    {
+        $renseigner = new Fichefrais();
+        $form = $this->createForm(ChoisirMoisType::class, $renseigner);
+        $form->handleRequest($query);
+
+        if ($form->isSubmitted()) {
+                    $session->set('mois', $renseigner->getMois()) ;
+                    return $this->redirectToRoute('getIdM');
+
+        }
+
+        return $this->render('comptable/choisirMois.html.twig', array('form' => $form->createView()));
+    }
+    
+        /**
      * @Route("/comptable_suivi", name="suivi")
+     */
+    public function choisirMois(Request $query, SessionInterface $session)
+    {
+        $renseigner = new Fichefrais();
+        $form = $this->createForm(ChoisirMoisType::class, $renseigner);
+        $form->handleRequest($query);
+
+        if ($form->isSubmitted()) {
+                    $session->set('mois', $renseigner->getMois()) ;
+                    return $this->redirectToRoute('suivi_fiche');
+
+        }
+        
+        return $this->render('comptable/choisirMois.html.twig', array('form' => $form->createView()));
+    }
+    
+    /**
+     * @Route("/comptable_suivi_fiche", name="suivi_fiche")
      */
     public function suivi(Request $query)
     {
@@ -252,9 +289,10 @@ class ComptableController extends AbstractController
     public function paiement(SessionInterface $session)
     {
         $id = $session->get('idU') ;
-        $fichefrais = $this->getDoctrine()->getManager()->getRepository(\App\Entity\FicheFrais::class)->findBy(['idVisiteur' => $id]);
-        $fichefraisforfait = $this->getDoctrine()->getManager()->getRepository(\App\Entity\LigneFraisForfait::class)->findBy(['idVisiteur' => $id]);
-        $fichefraishorsforfait = $this->getDoctrine()->getManager()->getRepository(\App\Entity\LigneFraisHorsForfait::class)->findBy(['idVisiteur' => $id]);
+        $mois = $session->get('mois') ;
+        $fichefrais = $this->getDoctrine()->getManager()->getRepository(\App\Entity\FicheFrais::class)->findBy(['idVisiteur' => $id, 'mois' => $mois]);
+        $fichefraisforfait = $this->getLignesFraisForfait($mois, $id);
+        $fichefraishorsforfait = $this->getLignesFraisHorsForfait($mois, $id);
         return $this->render('comptable/paiement.html.twig',array('fichefrais'=>$fichefrais, 'fichefraisforfait'=>$fichefraisforfait,  'fichefraishorsforfait'=>$fichefraishorsforfait));
     }
     

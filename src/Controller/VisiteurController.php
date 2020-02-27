@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class VisiteurController extends AbstractController
 {
-    /**
+        /**
      * @Route("/visiteur", name="visiteur")
      */
     public function index()
@@ -29,7 +29,7 @@ class VisiteurController extends AbstractController
         ]);
     }
     
-            /**
+        /**
      * @Route("/consulter", name="consulter")
      */
     public function consulter(Request $query, SessionInterface $session)
@@ -270,7 +270,7 @@ class VisiteurController extends AbstractController
         return $lignesUtilisateur;
     }
    
-   /**
+        /**
      * @Route("/getIdVI/{id}", name="getIdVI")
      */
     public function getIdVI($id, SessionInterface $session)
@@ -279,13 +279,11 @@ class VisiteurController extends AbstractController
         return $this->redirectToRoute('upd_route_fiche_frais');
     }
     
-    /**
-    *
+        /**
     *@Route("/modifierFicheFrais",name="upd_route_fiche_frais")
-    *
     */
     public function modifierFicheFrais(Request $request, SessionInterface $session){
-        
+
         $id = $session->get('idVI') ;
         $fichefrais = new FicheFrais();
         $fichefrais = $this->getDoctrine()->getManager()->getRepository(FicheFrais::class)->find($id);
@@ -305,7 +303,7 @@ class VisiteurController extends AbstractController
     return $this->render( 'visiteur/modifierFicheFrais.html.twig', array('form' =>$form->createView(), 'fichefrais'=>$fichefrais));
     }
     
-    /**
+        /**
      * @Route("/supprimerHorsForfaitVisiteur/{id}", name="supprimerHorsForfaitVisiteur")
      */
     public function supprimerHorsForfait(Request $query, SessionInterface $session, $id) {

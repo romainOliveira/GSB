@@ -38,8 +38,8 @@
                         <th scope="col">Montantvalide</th>
                         <th scope="col">Datemodif</th>
                         <th scope="col">Etat</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>   
+                        <!-- <th scope="col"></th>
+                        <th <th scope="col"></th> -->
                     </tr>
                 </thead>
                 <tbody>    
@@ -52,7 +52,7 @@
                             <td>{{ unefichefrais.montantvalide }}</td>
                             <td>{{ unefichefrais.datemodif|date('d-m-Y') }}</td>
                             <td>{{ unefichefrais.idEtat.libelle }}</td>
-                            {% if unefichefrais.idEtat.libelle == "Fiche créée, saisie en cours" %}
+                            <!--{% if unefichefrais.idEtat.libelle == "Fiche créée, saisie en cours" %}
                                 <form action="/getIdM/{{ unefichefrais.id }}" Method="post">
                                     <th><button>Modifier</button></th>
                                 </form>
@@ -61,7 +61,7 @@
                                 <form action="/getIdV/{{ unefichefrais.id }}" Method="post">
                                     <th><button>Valider</button></th>
                                 </form>
-                            {% endif %}
+                            {% endif %}-->
                         </tr>           
                     {% endfor %}
                 </tbody>
@@ -71,7 +71,7 @@
         {% endif %}
         
         {% if fichefraisforfait != null %}
-            <p style="font-weight:bold; width:60%; background-color:whitesmoke; border-radius: 5px;" class="table">Fiche Frais Forfait</p>
+            <p style="font-weight:bold; width:60%; background-color:whitesmoke; border-radius: 5px;" class="table">Ligne Frais Forfait</p>
             <table style="width:50%; background-color:whitesmoke; border-radius: 5px;" class="table">
                 <thead>
                     <tr>
@@ -93,13 +93,10 @@
         {% endif %}
         
         {% if fichefraishorsforfait != null %}
-            <p style="font-weight:bold; width:60%; background-color:whitesmoke; border-radius: 5px;" class="table">Fiche Frais Hors Forfait</p>
+            <p style="font-weight:bold; width:60%; background-color:whitesmoke; border-radius: 5px;" class="table">Ligne Frais Hors Forfait</p>
             <table style="width:50%; background-color:whitesmoke; border-radius: 5px;" class="table">
                 <thead>     
                     <tr>
-                        <th scope="col">Mois </th>
-                        <th scope="col">Nom </th>
-                        <th scope="col">Prenom </th>
                         <th scope="col">Montant</th>
                         <th scope="col">Date</th>
                         <th scope="col">Libelle</th>
@@ -108,9 +105,6 @@
                 <tbody>
                     {% for unefichefraishorsforfait in fichefraishorsforfait %}
                         <tr>
-                            <th scope="row">{{ unefichefraishorsforfait.mois.id }}</th>
-                            <td>{{ unefichefraishorsforfait.idVisiteur.nom }}</td>
-                            <td>{{ unefichefraishorsforfait.idVisiteur.prenom }}</td>
                             <td>{{ unefichefraishorsforfait.montant}}</td>
                             <td>{{ unefichefraishorsforfait.date|date('d-m-Y') }}</td>
                             <td>{{ unefichefraishorsforfait.libelle}}</td>   

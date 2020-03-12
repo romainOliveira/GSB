@@ -37,13 +37,10 @@ class VisiteurController extends AbstractController
         $renseigner = new Fichefrais();
         $form = $this->createForm(ChoisirMoisType::class, $renseigner);
         $form->handleRequest($query);
-
         if ($form->isSubmitted()) {
                     $session->set('mois', $renseigner->getMois()) ;
                     return $this->redirectToRoute('consulterFicheFrais');
-
         }
-
         return $this->render('visiteur/choisirMois.html.twig', array('form' => $form->createView()));
     }
     
@@ -57,11 +54,9 @@ class VisiteurController extends AbstractController
         $fichefrais = $this->getDoctrine()->getManager()->getRepository(\App\Entity\FicheFrais::class)->findBy(['idVisiteur' => $id, 'mois' => $mois]);
         $lignesfraisforfait = $this->getLignesFraisForfait($mois, $id);
         $lignesfraishorsforfait = $this->getLignesFraisHorsForfait($mois, $id);
-        if( $fichefrais == null && $lignesfraisforfait == null && $lignesfraishorsforfait == null){
-            
+        if( $fichefrais == null && $lignesfraisforfait == null && $lignesfraishorsforfait == null){            
         }
-        return $this->render('visiteur/consulter.html.twig',array('fichefrais'=>$fichefrais, 'fichefraisforfait'=>$lignesfraisforfait, 'fichefraishorsforfait'=>$lignesfraishorsforfait));
-       
+        return $this->render('visiteur/consulter.html.twig',array('fichefrais'=>$fichefrais, 'fichefraisforfait'=>$lignesfraisforfait, 'fichefraishorsforfait'=>$lignesfraishorsforfait));      
     }
     
          /**
@@ -217,6 +212,41 @@ class VisiteurController extends AbstractController
         $em->flush();
     }
     
+            /**
+    *@Route("/modifierFicheFrais",name="upd_route_fiche_frais")
+    */
+    public function modifierFicheFrais(Request $request, SessionInterface $session){
+
+        $id = $session->get('idVI') ;
+        $fichefrais = new FicheFrais();
+        $fichefrais = $this->getDoctrine()->getManager()->getRepository(FicheFrais::class)->find($id);
+        $fichefrais->setDateModif(new \DateTime());
+        $request->getSession()->getFlashBag()->add('notice', '');
+        $form = $this->createForm(ModifierFicheFraisVisiteurType::class, $fichefrais);
+        if($request->isMethod('POST')){
+            $form->handleRequest($request);
+                if($form->isValid()){
+                    $em = $this->getDoctrine()->getManager();
+                    $em->flush();
+                    $request->getSession()->getFlashBag()->add('success', 'Fiche frais modifié avec succès.');
+
+                    return $this->redirectToRoute('consulter');
+                }
+        }
+    return $this->render( 'visiteur/modifierFicheFrais.html.twig', array('form' =>$form->createView(), 'fichefrais'=>$fichefrais));
+    }
+    
+        /**
+     * @Route("/supprimerHorsForfaitVisiteur/{id}", name="supprimerHorsForfaitVisiteur")
+     */
+    public function supprimerHorsForfait(Request $query, SessionInterface $session, $id) {
+        $entityManager = $this->getDoctrine()->getManager();
+        $lignesFraisHorsForfait = $this->getDoctrine()->getManager()->getRepository(LigneFraisHorsForfait::class)->find($id);
+                $entityManager->remove($lignesFraisHorsForfait);
+                $entityManager->flush();
+        return $this->redirectToRoute('consulterFicheFrais');
+    }
+    
     public function getFiches() {
         $fiches = $this->getDoctrine()->getRepository(\App\Entity\FicheFrais::class)->findAll();
         return $fiches;
@@ -277,41 +307,5 @@ class VisiteurController extends AbstractController
     {
         $session->set('idVI', $id) ;
         return $this->redirectToRoute('upd_route_fiche_frais');
-    }
-    
-        /**
-    *@Route("/modifierFicheFrais",name="upd_route_fiche_frais")
-    */
-    public function modifierFicheFrais(Request $request, SessionInterface $session){
-
-        $id = $session->get('idVI') ;
-        $fichefrais = new FicheFrais();
-        $fichefrais = $this->getDoctrine()->getManager()->getRepository(FicheFrais::class)->find($id);
-        $fichefrais->setDateModif(new \DateTime());
-        $request->getSession()->getFlashBag()->add('notice', '');
-        $form = $this->createForm(ModifierFicheFraisVisiteurType::class, $fichefrais);
-        if($request->isMethod('POST')){
-            $form->handleRequest($request);
-                if($form->isValid()){
-                    $em = $this->getDoctrine()->getManager();
-                    $em->flush();
-                    $request->getSession()->getFlashBag()->add('success', 'Fiche frais modifié avec succès.');
-
-                    return $this->redirectToRoute('consulter');
-                }
-        }
-    return $this->render( 'visiteur/modifierFicheFrais.html.twig', array('form' =>$form->createView(), 'fichefrais'=>$fichefrais));
-    }
-    
-        /**
-     * @Route("/supprimerHorsForfaitVisiteur/{id}", name="supprimerHorsForfaitVisiteur")
-     */
-    public function supprimerHorsForfait(Request $query, SessionInterface $session, $id) {
-        $entityManager = $this->getDoctrine()->getManager();
-        $lignesFraisHorsForfait = $this->getDoctrine()->getManager()->getRepository(LigneFraisHorsForfait::class)->find($id);
-                $entityManager->remove($lignesFraisHorsForfait);
-                $entityManager->flush();
-        return $this->redirectToRoute('consulter');
-    }
-   
+    }   
 }

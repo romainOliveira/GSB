@@ -9,16 +9,11 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Form\ValiderFicheType;
 use App\Entity\Etat;
 use App\Entity\FicheFrais;
-use App\Entity\LigneFraisForfait;
-use App\Entity\LigneFraisHorsForfait;
-use App\Form\ChoisirMoisType;
-use App\Entity\Visiteur;
 use App\Form\ModifierFicheFraisType;
 use App\Form\ModifierQuantiteRepasType;
 use App\Form\ModifierQuantiteEtapeType;
 use App\Form\ModifierQuantiteKilometresType;
 use App\Form\ModifierQuantiteNuiteeType;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 
 class ComptableController extends AbstractController
@@ -30,50 +25,35 @@ class ComptableController extends AbstractController
     {
         return $this->render('comptable/index.html.twig');
     }
-    
-        /**
-     * @Route("/consulter", name="consulter")
-     */
-    public function consulter(Request $query, SessionInterface $session)
-    {
-        $renseigner = new Fichefrais();
-        $form = $this->createForm(ChoisirMoisType::class, $renseigner);
-        $form->handleRequest($query);
-
-        if ($form->isSubmitted()) {
-                    $session->set('mois', $renseigner->getMois()) ;
-                    return $this->redirectToRoute('getIdM');
-
-        }
-
-        return $this->render('comptable/choisirMois.html.twig', array('form' => $form->createView()));
-    }
-    
         /**
      * @Route("/comptable_suivi", name="suivi")
      */
     public function choisirMois(Request $query, SessionInterface $session)
     {
-        $renseigner = new Fichefrais();
-        $form = $this->createForm(ChoisirMoisType::class, $renseigner);
+        {
+        $ficheAValider = new FicheFrais();
+        $form = $this->createForm(ValiderFicheType::class, $ficheAValider);
         $form->handleRequest($query);
-
-        if ($form->isSubmitted()) {
-                    $session->set('mois', $renseigner->getMois()) ;
-                    return $this->redirectToRoute('suivi_fiche');
-
+        if ($query->isMethod('POST')) {
+            if ($form->isValid()) {
+                $fiches = $this->getFiches();
+                foreach ($fiches as $fiche) {
+                    if ($fiche->getMois() == $form['mois']->getData() && $fiche->getIdvisiteur() == $form['idVisiteur']->getData() && $fiche->getIdEtat()->getId() != "personne ne va lire ca de toute facon") {
+                        $session->set('mois', $fiche->getMois());
+                        $session->set('idU', $fiche->getIdVisiteur()->getId());
+                        $session->set('ficheId', $fiche->getId());
+                        return $this->redirectToRoute('paiement');
+                    }
+                }
+                return $this->render('comptable/valider.html.twig', array('form' => $form->createView(), 'error' => 1, 'modifier' => 0));
+            }
         }
-        
-        return $this->render('comptable/choisirMois.html.twig', array('form' => $form->createView()));
-    }
-    
-    /**
-     * @Route("/comptable_suivi_fiche", name="suivi_fiche")
-     */
-    public function suivi(Request $query)
-    {
-        $fichefrais = $this->getDoctrine()->getManager()->getRepository(\App\Entity\Visiteur::class)->findAll();
-        return $this->render('comptable/suivi.html.twig',array('fichefrais'=>$fichefrais));
+        if ($session->get('modifier') == 1) {
+            $session->set('modifier', 0);
+            return $this->render('comptable/valider.html.twig', array('form' => $form->createView(), 'error' => 0, 'modifier' => 1));
+        }
+        return $this->render('comptable/valider.html.twig', array('form' => $form->createView(), 'error' => 0, 'modifier' => 0));
+        }
     }
     
     /**
@@ -83,16 +63,14 @@ class ComptableController extends AbstractController
     {
         $session->set('idM', $id) ;
         return $this->redirectToRoute('upd_route');
-    }
-    
+    }    
     
     /**
     *
     *@Route("/modifier",name="upd_route")
     *
     */
-    public function modifier(Request $request, SessionInterface $session){
-        
+    public function modifier(Request $request, SessionInterface $session){      
         $id = $session->get('idM') ;
         $fichefrais = new FicheFrais();
         $fichefrais = $this->getDoctrine()->getManager()->getRepository(FicheFrais::class)->find($id);
@@ -121,7 +99,6 @@ class ComptableController extends AbstractController
         return $this->redirectToRoute('upd_valider');
     }
     
-    
     /**
     *
     *@Route("/modifier_validation",name="upd_valider")
@@ -140,8 +117,6 @@ class ComptableController extends AbstractController
 
             return $this->redirectToRoute('suivi');
     }
-    
-    
     
     /**
      * @Route("/comptable_valider", name="valider")
@@ -272,15 +247,6 @@ class ComptableController extends AbstractController
         }
         $session->set('modifier', 1);
         return $this->redirectToRoute('valider');
-    }
-    
-    /**
-     * @Route("/getIdU/{id}", name="getIdU")
-     */
-    public function getIdU($id, SessionInterface $session)
-    {
-        $session->set('idU', $id) ;
-        return $this->redirectToRoute('paiement');
     }
     
     /**

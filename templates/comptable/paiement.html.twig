@@ -52,7 +52,7 @@
                             <td>{{ unefichefrais.montantvalide }}</td>
                             <td>{{ unefichefrais.datemodif|date('d-m-Y') }}</td>
                             <td>{{ unefichefrais.idEtat.libelle }}</td>
-                            <!--{% if unefichefrais.idEtat.libelle == "Fiche créée, saisie en cours" %}
+                            {% if unefichefrais.idEtat.libelle == "Fiche créée, saisie en cours" %}
                                 <form action="/getIdM/{{ unefichefrais.id }}" Method="post">
                                     <th><button>Modifier</button></th>
                                 </form>
@@ -61,7 +61,7 @@
                                 <form action="/getIdV/{{ unefichefrais.id }}" Method="post">
                                     <th><button>Valider</button></th>
                                 </form>
-                            {% endif %}-->
+                            {% endif %}
                         </tr>           
                     {% endfor %}
                 </tbody>

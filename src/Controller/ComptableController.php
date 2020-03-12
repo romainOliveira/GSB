@@ -38,7 +38,7 @@ class ComptableController extends AbstractController
             if ($form->isValid()) {
                 $fiches = $this->getFiches();
                 foreach ($fiches as $fiche) {
-                    if ($fiche->getMois() == $form['mois']->getData() && $fiche->getIdvisiteur() == $form['idVisiteur']->getData() && $fiche->getIdEtat()->getId() != "personne ne va lire ca de toute facon") {
+                    if ($fiche->getMois() == $form['mois']->getData() && $fiche->getIdvisiteur() == $form['idVisiteur']->getData()) {
                         $session->set('mois', $fiche->getMois());
                         $session->set('idU', $fiche->getIdVisiteur()->getId());
                         $session->set('ficheId', $fiche->getId());
